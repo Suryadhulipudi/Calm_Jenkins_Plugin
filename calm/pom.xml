@@ -8,7 +8,7 @@
         <relativePath />
     </parent>
     <artifactId>calm</artifactId>
-    <version>6.0-SNAPSHOT</version>
+    <version>7.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->

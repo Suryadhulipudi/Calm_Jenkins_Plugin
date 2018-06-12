@@ -15,7 +15,7 @@
             <f:textbox />
         </f:entry>
         <f:entry title="Calm Application name" field="appname"
-                 description="Enter calm application name. eg: Redis_app ">
+                 description="Enter calm application name. eg: Redis_app, NOTE: UNIX Timestamp will be concatenate with app name like Redis_app _1528798193">
             <f:textbox />
         </f:entry>
         <f:entry title="Calm Application profile" field="profname"

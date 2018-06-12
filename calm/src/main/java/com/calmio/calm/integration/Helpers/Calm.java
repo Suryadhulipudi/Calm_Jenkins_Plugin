@@ -112,49 +112,6 @@ public class Calm {
             throw new Exception("Blueprint with name " + this.BP_NAME + " not found in list");
         }
 
-        url = new URL("https://"+this.PCVM_IP+":9440/api/nutanix/v3/apps/list");
-        encoding = DatatypeConverter.printBase64Binary((this.USERNAME+":"+this.PASSWORD).getBytes());
-        HttpURLConnection app = (HttpURLConnection) url.openConnection();
-        app.setRequestMethod("POST");
-        app.setDoOutput(true);
-        app.setRequestProperty("Authorization", "Basic " + encoding);
-        app.setRequestProperty("User-Agent", USER_AGENT);
-        app.setRequestProperty("Content-Type", "application/json");
-
-
-        // For POST only - START
-        app.setDoOutput(true);
-        os = app.getOutputStream();
-        os.write(POST_PARAMS.getBytes());
-        os.flush();
-        os.close();
-        // For POST only - END
-
-        responseCode = app.getResponseCode();
-        in =
-                new BufferedReader(new InputStreamReader(app.getInputStream()));
-        String APP_NAME = null;
-        response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        //System.out.println(line);
-        outerObject = new JSONObject(response.toString());
-        entities = outerObject.getJSONArray("entities");
-        boolean appExists = false;
-        for (int i = 0; i < entities.length(); i++) {
-            JSONObject entity = entities.getJSONObject(i);
-            String entityName = entity.getJSONObject("status").getString("name");
-            if (entityName.equals(this.APP_NAME)) {
-                appExists = true;
-                break;
-            }
-        }
-
-        if (appExists) {
-            throw new Exception("Application with name " + this.APP_NAME + " already exists");
-        }
-
         url = new URL("https://"+this.PCVM_IP+":9440/api/nutanix/v3/blueprints/" + bpId);
         encoding = DatatypeConverter.printBase64Binary((this.USERNAME+":"+this.PASSWORD).getBytes());
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -169,9 +126,11 @@ public class Calm {
             response.append(inputLine);
         }
         JSONObject launchBp = new JSONObject(response.toString());
+        long time = (System.currentTimeMillis() / 1000L);
+        String appname = this.APP_NAME + "_" + time;
         launchBp.remove("status");
         launchBp.getJSONObject("spec").remove("name");
-        launchBp.getJSONObject("spec").put("application_name", this.APP_NAME);
+        launchBp.getJSONObject("spec").put("application_name", appname);
         String appProfileUuid = null;
         // get app profile refrence from name
         JSONArray appProfileList = launchBp.getJSONObject("spec").getJSONObject("resources").getJSONArray("app_profile_list");
@@ -212,7 +171,7 @@ public class Calm {
         }
 
         if (responseCode == 200) {
-            System.out.println("Blueprint " + this.BP_NAME + "has been lanched sucessfully with application name " + this.APP_PROFILE_NAME + "with profile" + this.APP_PROFILE_NAME);
+            System.out.println("Blueprint " + this.BP_NAME + "has been lanched sucessfully with application name " + appname + "with profile" + this.APP_PROFILE_NAME);
 		
 
         }

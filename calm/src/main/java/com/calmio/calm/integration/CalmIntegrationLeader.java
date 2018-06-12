@@ -84,7 +84,7 @@ public class CalmIntegrationLeader extends Builder {
         log.println("##Connecting to calm instance##");
         try{
 		 call.launchBlueprint();
-                 log.println("Blueprint " + getBpname() + " has been launched sucessfully with application name " + getAppname() + " with profile " + getProfname());
+                 log.println("Blueprint " + getBpname() + " has been launched sucessfully with profile " + getProfname());
 		return true;
     	}
 	catch (Exception e){
